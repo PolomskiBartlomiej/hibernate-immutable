@@ -5,7 +5,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.Immutable;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by mtumilowicz on 2018-10-21.
@@ -27,5 +27,5 @@ public class Customer {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn
     @Immutable
-    Collection<Issue> issues;
+    List<Issue> issues;
 }

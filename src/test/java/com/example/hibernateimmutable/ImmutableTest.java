@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.Arrays;
@@ -27,7 +28,7 @@ public class ImmutableTest {
 
     @Autowired
     CustomerRepository repository;
-    
+
     @After
     public void deleteAll() {
         repository.deleteAll();
@@ -48,7 +49,7 @@ public class ImmutableTest {
                 .build();
 
         repository.save(customer);
-        
+
 //        when
         Customer modified = Customer.builder()
                 .id(1)
@@ -56,12 +57,12 @@ public class ImmutableTest {
                 .build();
 
         repository.save(modified);
-        
+
 //        then
         Customer customer1 = repository.findById(1).orElseThrow(EntityNotFoundException::new);
         assertThat(customer1.getName(), is("customer1"));
     }
-    
+
     @Test(expected = JpaSystemException.class)
     public void modifyImmutableCollection_thenSave() {
 //        given
@@ -91,5 +92,32 @@ public class ImmutableTest {
                 .build();
 
         repository.save(modified);
+    }
+
+    @Test
+    @Transactional
+    public void modifyMutableEntity_inImmutableCollection() {
+        //        given
+        Issue issue = Issue.builder()
+                .id(1)
+                .description("issue1")
+                .build();
+
+        Customer customer = Customer.builder()
+                .id(1)
+                .name("customer1")
+                .issues(Collections.singletonList(issue))
+                .build();
+
+        repository.save(customer);
+
+//        when
+        Customer customerFromDatabase = repository.findById(1).orElseThrow(EntityNotFoundException::new);
+        customerFromDatabase.getIssues().get(0).setDescription("modifiedDescription");
+        repository.save(customerFromDatabase);
+        
+//        then
+        assertThat(repository.findById(1).orElseThrow(EntityNotFoundException::new).getIssues().get(0).getDescription(), 
+                is("modifiedDescription"));
     }
 }
