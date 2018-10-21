@@ -1,4 +1,9 @@
+[![Build Status](https://travis-ci.com/mtumilowicz/hibernate-immutable.svg?branch=master)](https://travis-ci.com/mtumilowicz/hibernate-immutable)
+
 # hibernate-immutable
+The main goal of this project is to explore `@Immutable` annotation
+from Hibernate API.
+
 _Reference_: https://docs.jboss.org/hibernate/orm/5.3/javadocs/org/hibernate/annotations/Immutable.html  
 _Reference_: http://docs.jboss.org/hibernate/orm/5.3/userguide/html_single/Hibernate_User_Guide.html#entity-immutability
 
