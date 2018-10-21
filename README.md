@@ -27,6 +27,9 @@ state for the dirty checking mechanism,
 * speeding-up the Persistence Context flushing phase since immutable 
 entities can skip the dirty checking process.
 
+When loading the entity and trying to change its state, Hibernate will 
+skip any modification, therefore no `SQL UPDATE` statement is executed.
+
 # project description
 In `ImmutableTest` class we provide basic tests:
 * `modifyImmutableEntity_thenSave`
